@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+	<meta charset="UTF-8">
+	<meta name="theme-color" content="#186A59">
+	<title>di.fm controller</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+	<link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon" />
+	<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon" />
+	<style>
+		@media screen and (min-width: 980px) /* Desktop */ {
+				.login{	width:50%;	}
+			}
+			@media screen and (max-width: 980px) /* Desktop */ {
+				.login{	width:100%;	}
+			}
+	</style>
+</head>
+
+<body style="overflow:auto;">
+	<div id="dialog" title="Message"></div>
+	<div id="maindiv" class="login">
+		<h1>di.fm controller</h1>
+		{% if error %}
+		<h1 style="color:#f97a7a;">{{error}}</h1>
+		{% endif %}
+		<div id="main-menu" style="outline: 2px solid #CCC;border: 1px solid #999;padding:20px;">
+			<h3 style="color:white;margin:0 auto;width:50%;text-align:center;">manual selection</h3>
+			<br>
+			<!-- All available actions go here -->
+			<div style="width:30%;float:left;">
+				<label style="float:right;padding-right:10%;color:white;" for="channel">Channel</label>
+			</div>
+			<form action="process" method="post" id="manual">
+				<select name="channel" form="manual" id="channel" style="width:41%;margin-bottom:10px;background-color:#154144;color:white;">
+					{% for friendly,actual in channels.items() %}
+					<option value="{{actual}}">{{friendly}}</option>
+					{% endfor %}
+				</select>
+
+				<div style="width:30%;float:left;">
+					<label style="float:right;padding-right:10%;color:white;" for="device">Device</label>
+				</div>
+				<select name="device" form="manual" id="device" style="width:41%;margin-bottom:10px;background-color:#154144;color:white;">
+					{% for cc in chromecasts %}
+					<option value="{{cc}}">{{cc}}</option>
+					{% endfor %}
+				</select>
+				<br>
+				<input type="hidden" name="t" value="manual" style="display: none;">
+				<button style="width:50%;height:60px;margin:0 auto;" id="sub" type="submit" class="btn btn-primary btn-block btn-large">Play</button>
+			</form>
+		</div>
+		<br>
+
+		<div id="controls" style="outline: 2px solid #CCC;border: 1px solid #999;padding:10px;">
+			<div style="margin:0 auto;text-align:center;">
+				<form action="process" method="post" style="display:initial;width:35%;height:40px;">
+					<input type="hidden" name="t" value="update" style="display: none;">
+					<button style="display:initial;width:35%;height:40px;" id="updateb" type="submit" class="btn btn-primary btn-block btn-large">Update
+						Device List</button>
+				</form>
+				<form action="process" method="post" style="display:initial;width:35%;height:40px;">
+					<input type="hidden" name="t" value="stopall" style="display: none;">
+					<button style="display:initial;width:35%;height:40px;" id="stopb" type="submit" class="btn btn-primary btn-block btn-large">Stop
+						All</button>
+				</form>
+			</div>
+
+
+		</div>
+		<br>
+
+		<div id="volumediv" style="outline: 2px solid #CCC;border: 1px solid #999;padding:10px;">
+			<div style="margin:0 auto;text-align:center;">
+				<form id="volumeform" action="process" method="post" style="display:initial;width:35%;height:40px;">
+					<input type="hidden" name="t" value="volume" style="display: none;">
+					<select name="device" form="volumeform" id="device" style="width:41%;margin-bottom:10px;background-color:#154144;color:white;">
+						{% for cc in chromecasts %}
+						<option value="{{cc}}">{{cc}}</option>
+						{% endfor %}
+					</select>
+					<datalist id="tickmarks">
+							<option value="0.0" label="0%">
+							<option value="0.1">
+							<option value="0.2">
+							<option value="0.3">
+							<option value="0.4">
+							<option value="0.5" label="50%">
+							<option value="0.6">
+							<option value="0.7">
+							<option value="0.8">
+							<option value="0.9">
+							<option value="1.0" label="100%">
+						  </datalist>
+					<input step="0.025" type="range" min="0.0" max="1.0" name="volume" list="tickmarks">
+					<button style="display:initial;width:35%;height:40px;" id="updateb" type="submit" class="btn btn-primary btn-block btn-large">Update
+						Volume</button>
+				</form>
+			</div>
+		</div>
+		<br>
+
+		<div id="favorite_buttons" style="outline: 2px solid #CCC;border: 1px solid #999;padding:10px;">
+			<h3 style="color:white;margin:0 auto;width:50%;text-align:center;">favorites</h3>
+			<br>
+			<table style="width:85%;table-layout:fixed;margin:0 auto;">
+				<tr>
+					<td>
+						<form action="process" method="post">
+							<input type="hidden" name="t" value="fav" style="display: none;">
+							<input type="hidden" name="device" value="Home group" style="display: none;">
+							<input type="hidden" name="channel" value="lounge_hi" style="display: none;">
+							<button style="text-shadow: 0 0 3px #FFFFFF;font-size:15pt;background-size:100% 100%;background-image:url('{{ url_for('static', filename='images/loung.jpg') }}');color:black;height:220px;display:initial;"
+							 type="submit" class="btn btn-primary btn-block btn-large">Lounge - All</button>
+						</form>
+					</td>
+					<td>
+						<form action="process" method="post">
+							<input type="hidden" name="t" value="fav" style="display: none;">
+							<input type="hidden" name="device" value="Home group" style="display: none;">
+							<input type="hidden" name="channel" value="breaks_hi" style="display: none;">
+							<button style="text-shadow: 0 0 3px #FFFFFF;font-size:15pt;background-size:100% 100%;background-image:url('{{ url_for('static', filename='images/breaks.jpg') }}');color:white;height:220px;display:initial;"
+							 type="submit" class="btn btn-primary btn-block btn-large">Breaks - All</button>
+						</form>
+					</td>
+					<td>
+						<form action="process" method="post">
+							<input type="hidden" name="t" value="fav" style="display: none;">
+							<input type="hidden" name="device" value="Home group" style="display: none;">
+							<input type="hidden" name="channel" value="atmosphericbreaks_hi" style="display: none;">
+							<button style="text-shadow: 0 0 3px #FFFFFF;font-size:15pt;background-size:100% 100%;background-image:url('{{ url_for('static', filename='images/atmos.jpg') }}');color:black;height:220px;display:initial;"
+							 type="submit" class="btn btn-primary btn-block btn-large">Atmospheric Breaks - All</button>
+						</form>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<form action="process" method="post">
+							<input type="hidden" name="t" value="fav" style="display: none;">
+							<input type="hidden" name="device" value="Home group" style="display: none;">
+							<input type="hidden" name="channel" value="synthwave_hi" style="display: none;">
+							<button style="text-shadow: 0 0 3px #000000;font-size:15pt;background-size:100% 100%;background-image:url('{{ url_for('static', filename='images/synthwave.jpg') }}');color:white;height:220px;display:initial;"
+							 type="submit" class="btn btn-primary btn-block btn-large">Synthwave - All</button>
+						</form>
+					</td>
+					<td>
+						<form action="process" method="post">
+							<input type="hidden" name="t" value="fav" style="display: none;">
+							<input type="hidden" name="device" value="Home group" style="display: none;">
+							<input type="hidden" name="channel" value="futurebass_hi" style="display: none;">
+							<button style="text-shadow: 0 0 3px #000000;font-size:15pt;background-size:100% 100%;background-image:url('{{ url_for('static', filename='images/futurebass.jpg') }}');color:white;height:220px;display:initial;"
+							 type="submit" class="btn btn-primary btn-block btn-large">Future Bass - All</button>
+						</form>
+					</td>
+					<td>
+						<form action="process" method="post">
+							<input type="hidden" name="t" value="fav" style="display: none;">
+							<input type="hidden" name="device" value="Home group" style="display: none;">
+							<input type="hidden" name="channel" value="electroswing_hi" style="display: none;">
+							<button style="text-shadow: 0 0 3px #FFFFFF;font-size:15pt;background-size:100% 100%;background-image:url('{{ url_for('static', filename='images/electro.jpg') }}');color:black;height:220px;display:initial;"
+							 type="submit" class="btn btn-primary btn-block btn-large">Electroswing - All</button>
+						</form>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<br>
+
+
+	</div>
+</body>
+
+</html>

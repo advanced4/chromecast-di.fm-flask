@@ -7,3 +7,7 @@ See settings in difm.py
 This flask app also serves as an API, so you can do neat things like pressing an Amazon Dash button to play trigger something. Included is dash_difm.py which shows an example usage of this
 
 MIT license
+
+
+![Desktop](/info/desktop.png?raw=true "Desktop")
+![Mobile](/info/phone.png?raw=true "Mobile")

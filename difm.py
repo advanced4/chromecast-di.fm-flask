@@ -7,7 +7,7 @@ from secrets import DIFM_KEY
 ############# SETTINGS ###############
 debug = True
 show_audio_only_devices = False
-difm_key = DIFM_KEY # your API key for di.fm
+difm_key = DIFM_KEY  # your API key for di.fm
 difm_channels = {
         "Lounge":"lounge_hi",
         "Future Bass": "futurebass_hi",

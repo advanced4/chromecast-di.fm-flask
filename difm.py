@@ -2,11 +2,12 @@
 # MIT License
 import pychromecast
 from flask import Flask, request, render_template, redirect
+from secrets import DIFM_KEY
 
 ############# SETTINGS ###############
 debug = True
 show_audio_only_devices = False
-difm_key = "***REMOVED***"
+difm_key = DIFM_KEY # your API key for di.fm
 difm_channels = {
         "Lounge":"lounge_hi",
         "Future Bass": "futurebass_hi",

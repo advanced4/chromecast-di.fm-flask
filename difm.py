@@ -5,23 +5,42 @@ from flask import Flask, request, render_template, redirect
 
 ############# SETTINGS ###############
 debug = True
-show_audio_only_devices = True
-difm_key = "FILLMEIN"
+show_audio_only_devices = False
+difm_key = "***REMOVED***"
 difm_channels = {
-    "Lounge":"lounge_hi",
-    "Future Bass": "futurebass_hi",
-    "Synthwave":"synthwave_hi",
-    "Deep Tech":"deeptech_hi",
-    "Liquid DnB":"liquiddnb_hi",
-    "Electroswing":"electroswing_hi",
-    "Atmospheric Breaks":"atmosphericbreaks_hi",
-    "Breaks": "breaks_hi",
+        "Lounge":"lounge_hi",
+        "Future Bass": "futurebass_hi",
+        "Synthwave":"synthwave_hi",
+        "Deep Tech":"deeptech_hi",
+        "Liquid DnB":"liquiddnb_hi",
+        "Electroswing":"electroswing_hi",
+        "Atmospheric Breaks":"atmosphericbreaks_hi",
+        "Breaks": "breaks_hi",
+        "Vocal House": "vocalhouse_hi",
+        "Vocal Trance": "vocaltrance_hi",
+        "Chillout":"chillout_hi",
+        "Trance":"trance_hi",
+        "Progressive":"progressive_hi",
+        "Chillout Dreams":"chilloutdreams_hi",
+        "Space Dreams":"spacedreams_hi",
+        "Vocal Chillout":"vocalchillout_hi",
+        "Melodic Progressive":"melodicprogressive_hi",
+        "Chillstep":"chillstep_hi",
+        "Ambient":"ambient_hi",
+        "Epic Trance":"epictrance_hi",
+        "Classic Trance":"classictrance_hi",
+        "Eurodance":"eurodance_hi",
+        "Club Sounds":"clubsounds_hi",
+        "Vocal Lounge":"vocalounge_hi",
+        "Electro House":"electrohouse_hi",
+        "Disco House":"discohouse_hi"
 }
-audio_model_names = ["Google Home", "Google Home Mini", "Google Cast Group"]
+
+audio_model_names = ["Google Home", "Google Home Mini", "Google Cast Group", "Insignia NS-CSPGASP2", "Insignia NS-CSPGASP"]
 ######################################
 
 ######## GLOBALS #####################
-ccs = pychromecast.get_chromecasts()
+ccs = pychromecast.get_chromecasts(tries=3, retry_wait=2, timeout=10)
 chomecast_names = []
 app = Flask(__name__)
 ######################################
@@ -59,6 +78,9 @@ def update_chromecast_devices():
     global ccs
     global chomecast_names
     ccs = pychromecast.get_chromecasts()
+
+    for cc in ccs:
+        print(cc.device.model_name)
 
     if show_audio_only_devices:
         chomecast_names = sorted([cc.device.friendly_name for cc in ccs if cc.device.model_name in audio_model_names])
@@ -125,4 +147,4 @@ def main():
 
 if __name__ == "__main__":
     update_chromecast_devices()
-    app.run(host="0.0.0.0", port=5000, debug=debug)
+    # app.run(host="0.0.0.0", port=5000, debug=debug)
